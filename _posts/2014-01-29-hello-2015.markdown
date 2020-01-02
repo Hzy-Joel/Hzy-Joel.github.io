@@ -1,77 +1,76 @@
 ---
 layout:     post
-title:      "Hello 2015"
-subtitle:   " \"Hello World, Hello Blog\""
-date:       2015-01-29 12:00:00
-author:     "Hux"
-header-img: "img/post-bg-2015.jpg"
+title:      "Materil Design 布局"
+subtitle:   " Materil Design 布局使用"
+date:       2020-01-2 12:00:00
+author:     "hzy"
+//header-img: "img/post-bg-2015.jpg"
 catalog: true
 tags:
-    - 生活
-    - Meta
+    - Android
+    - 布局
 ---
 
-> “Yeah It's on. ”
 
 
-Hux 的 Blog 就这么开通了。
-
-[跳过废话，直接看技术实现 ](#build) 
-
-2015 年，Hux 总算有个地方可以好好写点东西了。
 
 
-作为一个程序员， Blog 这种轮子要是挂在大众博客程序上就太没意思了。一是觉得大部分 Blog 服务都太丑，二是觉得不能随便定制不好玩。之前因为太懒没有折腾，结果就一直连个写 Blog 的地儿都没有。
-
-在玩了一段时间知乎之后，答题的快感又激起了我开博客的冲动。之前的[个人网站](http://huangxuan.me/portfolio)是作品集形式的（现在集成进来了），并不适合用来写博文，一不做二不休，花一天搞一个吧！
+# Materil Design 布局：
 
 
-<p id = "build"></p>
-
-## 正文
-
-接下来说说搭建这个博客的技术细节。  
-
-正好之前就有关注过 [GitHub Pages](https://pages.github.com/) + [Jekyll](http://jekyllrb.com/) 快速 Building Blog 的技术方案，非常轻松时尚。
-
-其优点非常明显：
-
-* **Markdown** 带来的优雅写作体验
-* 非常熟悉的 Git workflow ，**Git Commit 即 Blog Post**
-* 利用 GitHub Pages 的域名和免费无限空间，不用自己折腾主机
-	* 如果需要自定义域名，也只需要简单改改 DNS 加个 CNAME 就好了 
-* Jekyll 的自定制非常容易，基本就是个模版引擎
+### AppBarLayout：实现子控件联动布局
+#### 布局属性：
+- layout_behavior属性（该属性必须是AppBarLayout的直接子布局）：
+    - @string/appbar_scrolling_view_behavior：当布局中存在滚动布局时需要设置该属性通知布局具有滚动布局
+-  layout_scrollFlags属性：  
+   - scroll：设置可滚动，即跟随布局中可滚动的View一起滚动，该属性必须设置，否则其他属性无效 
+   - enterAlways：向下滚动时该布局立刻出现，即快速返回功能
+   - exitUntilCollapsed：设置了minHeight后  滚动只会折叠到最小高度不会全部消失
+   - enterAlwaysCollapsed：设置了最小高度后，向下滑动会先滑动这个布局到最小高度再滑动其他控件，这个属性最好设置为scroll|enterAlways|enterAlwaysCollapsed，因为只有在其他滑动控件可向下滑动时再滑动才能看出效果是先滑动了这个布局再滚动其他布局。
 
 
-本来觉得最大的缺点可能是 GitHub 在国内访问起来太慢，所以第二天一起床就到 GitCafe(Chinese GitHub Copy，现在被 Coding 收购了) 迁移了一个[镜像](http://huxpro.coding.me)出来，结果还是巨慢。
+### CollapsingToolbarLayout：实现折叠布局
+#### 布局属性：
+- layout_collapseMode：设置折叠模式属性
+    - off：默认属性，布局正常显示， 没有折叠效果
+    - pin：折叠后停留在顶部（初始不会跟随滚动控件移动，当到达底部触及CollapsingToolbarLayout布局底部后跟随滚动向上，最后的效果会停留在CollapsingToolbarLayout布局的底部）
+    - parallax：视差折叠效果（根据滚动视图的滚动按照（layout_collapseParallaxMultiplier的属性值）滚动该控件）
+- layout_collapseParallaxMultiplier：设置滚动视差因子，在layout_collapseMode属性设置为parallax后该设置生效，该值取值为0~1，对应是指布局占据该CollapsingToolbarLayout布局下半部分的比例）。也可以直观认为是该控件跟随滚动控件移动的速率转换，当为0 时跟随滚动一起滚动，为0.5时只滚动一半的速率。
+- contentScrim=”?attr/colorPrimary”：设置属性之后折叠toolbar会显示主题的颜色  
 
-哥哥可是个前端好嘛！ 果断开 Chrome DevTool 查了下网络请求，原来是 **pending 在了 Google Fonts** 上，页面渲染一直被阻塞到请求超时为止，难怪这么慢。  
-忍痛割爱，只好把 Web Fonts 去了（反正超时看到的也只能是 fallback ），果然一下就正常了，而且 GitHub 和 GitCafe 对比并没有感受到明显的速度差异，虽然 github 的 ping 值明显要高一些，达到了 300ms，于是用 DNSPOD 优化了一下速度。
+  
+  
+    
+      
+      
+
+### AppBarLayout自定义Behavior实现：  
+- 实现CoordinatorLayout.Behavior<View>接口：其中的View泛型指定使用该BehaViro的控件类型，记得重写两个参数方法才能在布局中使用。
+- 接口方法：
+   -  boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency)，其中parent为根布局，child为使用该Behavior的控件，dependency为监听的控件，返回值为true表示监听dependency的变化，如果想指定监听RecycleView的可以这样写： 
+        ``` 
+        @Override
+        public boolean layoutDependsOn(CoordinatorLayout parent, View child, View dependency) {   
+            return dependency instanceof RecyclerView;
+        } 
+        ```   
+   - boolean onDependentViewChanged(CoordinatorLayout parent, View child, View dependency) ：在滚动控件dependency位置改变时调用，即dependency.getY()属性变化时，（该函数只会在dependency的位置变化时和初始化时调用，内部的滚动滚动会调用NestedScrolling接口的方法）
 
 
----
-
-配置的过程中也没遇到什么坑，基本就是 Git 的流程，相当顺手
-
-大的 Jekyll 主题上直接 fork 了 Clean Blog（这个主题也相当有名，就不多赘述了。唯一的缺点大概就是没有标签支持，于是我给它补上了。）
-
-本地调试环境需要 `gem install jekyll`，结果 rubygem 的源居然被墙了……后来手动改成了我大淘宝的镜像源才成功
-
-Theme 的 CSS 是基于 Bootstrap 定制的，看得不爽的地方直接在 Less 里改就好了（平时更习惯 SCSS 些），**不过其实我一直觉得 Bootstrap 在移动端的体验做得相当一般，比我在淘宝参与的团队 CSS 框架差多了……**所以为了体验，也补了不少 CSS 进去
-
-最后就进入了耗时反而最长的**做图、写字**阶段，也算是进入了**写博客**的正轨，因为是类似 Hack Day 的方式去搭这个站的，所以折腾折腾着大半夜就过去了。
-
-第二天考虑中文字体的渲染，fork 了 [Type is Beautiful](http://www.typeisbeautiful.com/) 的 `font` CSS，调整了字号，适配了 Win 的渣渲染，中英文混排效果好多了。
 
 
-## 后记
 
-回顾这个博客的诞生，纯粹是出于个人兴趣。在知乎相关问题上回答并获得一定的 star 后，我决定把这个博客主题当作一个小小的开源项目来维护。
 
-在经历 v1.0 - v1.5 的蜕变后，这个博客主题愈发完整，不但增加了诸多 UI 层的优化（opinionated）；在代码层面，更加丰富的配置项也使得这个主题拥有了更好的灵活性与可拓展性。而作为一个开源项目，我也积极的为其完善文档与解决 issue。
 
-如果你恰好逛到了这里，希望你也能喜欢这个博客主题。
 
-—— Hux 后记于 2015.10
+
+  
+
+
+
+
+
+
+
 
 
