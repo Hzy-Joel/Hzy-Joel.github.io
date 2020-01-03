@@ -11,14 +11,18 @@ tags:
     - 布局
 ---
 
-
-
-
 # Materil Design 布局：
+
+
 ### CoordinatorLayout：实现联动布局
 - layout_behavior属性（该属性必须是AppBarLayout的直接子布局）：
     - @string/appbar_scrolling_view_behavior：当布局中存在滚动布局时需要设置该属性通知布局具有滚动布局
-### AppBarLayout：实现子控件联动布局
+
+
+
+
+
+### AppBarLayout：实现子控件滚动联动布局
 #### 布局属性：
 -  layout_scrollFlags属性：  
    - scroll：设置可滚动，即跟随布局中可滚动的View一起滚动，该属性必须设置，否则其他属性无效 
@@ -53,12 +57,6 @@ tags:
         } 
         ```   
    - boolean onDependentViewChanged(CoordinatorLayout parent, View child, View dependency) ：在滚动控件dependency位置改变时调用，即dependency.getY()属性变化时，（该函数只会在dependency的位置变化时和初始化时调用，内部的滚动滚动会调用NestedScrolling接口的方法）
-
-
-
-
-
-
 
 
 
