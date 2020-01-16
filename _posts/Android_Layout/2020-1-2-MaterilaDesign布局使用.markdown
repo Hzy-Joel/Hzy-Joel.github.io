@@ -28,7 +28,7 @@ tags:
    - scroll：设置可滚动，即跟随布局中可滚动的View一起滚动，该属性必须设置，否则其他属性无效 
    - enterAlways：向下滚动时该布局立刻出现，即快速返回功能
    - exitUntilCollapsed：设置了minHeight后  滚动只会折叠到最小高度不会全部消失
-   - enterAlwaysCollapsed：设置了最小高度后，向下滑动会先滑动这个布局到最小高度再滑动其他控件，这个属性最好设置为scroll|enterAlways|enterAlwaysCollapsed，因为只有在其他滑动控件可向下滑动时再滑动才能看出效果是先滑动了这个布局再滚动其他布局。
+   - enterAlwaysCollapsed：设置了最小高度后，向下滑动会先滑动这个布局到最小高度再滑动其他控件，这个属性最好设置为scroll&#124;enterAlways&#124;enterAlwaysCollapsed，因为只有在其他滑动控件可向下滑动时再滑动才能看出效果是先滑动了这个布局再滚动其他布局。
 
 
 ### CollapsingToolbarLayout：实现折叠布局
