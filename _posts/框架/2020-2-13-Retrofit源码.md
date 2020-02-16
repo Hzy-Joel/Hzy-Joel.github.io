@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Retrofit源码解析"
-subtitle:   " 单例模式实现"
+subtitle:   " Retrofit源码解析"
 date:       2020-02-13 22:41:00
 author:     "hzy"
 //header-img: "img/post-bg-2015.jpg"
