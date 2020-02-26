@@ -310,20 +310,21 @@ addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 //其中不同的Observable类为CallEnqueueObservable、CallExecuteObservable、ResultObservable、BodyObservable。
 根据Rxjava2的中的Observable类，在具体subscribe时会调用subscribeActual方法
 进入CallEnqueueObservable的subscribeActual方法：
-```@Override protected void subscribeActual(Observer<? super Response<T>> observer) {
-    //由于Call是一种一次性类型，因此请为每个新的观察者克隆它。
-    Call<T> call = originalCall.clone();
-    //创建一个请求CallCallback，该类实现了Callback<T>接口，又实现了Rxjava2的Disposable接口
-    CallCallback<T> callback = new CallCallback<>(call, observer);
-    //同步操作，也就是在使用这个observer类取消时，CallCallback这个Disposable子类也会调用相应的取消方法。
-    observer.onSubscribe(callback);
-    //异步请求启动
-    call.enqueue(callback);
-  }
+```
+	@Override protected void subscribeActual(Observer<? super Response<T>> observer) {
+		//由于Call是一种一次性类型，因此请为每个新的观察者克隆它。
+		Call<T> call = originalCall.clone();
+		//创建一个请求CallCallback，该类实现了Callback<T>接口，又实现了Rxjava2的Disposable接口
+		CallCallback<T> callback = new CallCallback<>(call, observer);
+		//同步操作，也就是在使用这个observer类取消时，CallCallback这个Disposable子类也会调用相应的取消方法。
+		observer.onSubscribe(callback);
+		//异步请求启动
+		call.enqueue(callback);
+	}
 ```
 最终还是调用了Call<T>类的enqueue方法，这个方法的回调会回到Callback的onResonse方法中：
 ```
-@Override public void onResponse(Call<T> call, Response<T> response) {
+	@Override public void onResponse(Call<T> call, Response<T> response) {
       if (call.isCanceled()) return;
       try {
         observer.onNext(response);
