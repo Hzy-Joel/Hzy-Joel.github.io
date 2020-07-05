@@ -153,9 +153,9 @@ override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, sta
         }
 ```
 #### 实现粘性头部：在onDraw中绘制每个分组的头部，在onDrawOver中绘制常驻的粘性头部并且根据分组的最后一个距离顶上的距离移动画布实现在分组交换时对头部的过渡
-- 1. 使用：
+- 使用：
 ```
-   rv.addItemDecoration(StickHeaderItemDecoration(R.layout.stick_view, 80).apply {
+rv.addItemDecoration(StickHeaderItemDecoration(R.layout.stick_view, 80).apply {
             setTransfer(object : StickHeadTransfer() {
                 override fun isFirst(position: Int): Boolean {
                     //判定位置是否为分组的第一个 可以根据自己的数据类型传递
@@ -174,9 +174,10 @@ override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, sta
                 }
 
             })
-        })     
+        })    
 ```
-- 2. 自定义的ItemDecoration：
+
+- 自定义的ItemDecoration：
 ```
     abstract class StickHeadTransfer {
         abstract fun isFirst(position: Int): Boolean
