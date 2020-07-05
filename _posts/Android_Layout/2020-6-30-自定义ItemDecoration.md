@@ -152,6 +152,8 @@ override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, sta
             c.translate(0.toFloat(), -(top - dividerHeight.dp.toFloat()))
         }
 ```
+
+
 #### 实现粘性头部：在onDraw中绘制每个分组的头部，在onDrawOver中绘制常驻的粘性头部并且根据分组的最后一个距离顶上的距离移动画布实现在分组交换时对头部的过渡
 - 使用：
 ```
